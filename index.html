@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Robot seguidor de mano | Electrónica Digital</title>
+
+<style>
+/* ===== 1. COLORES (cámbialos aquí y se actualiza todo el sitio) ===== */
+:root {
+  --azul: #12304f;        /* azul oscuro principal */
+  --azul-claro: #1d4a75;
+  --gris-fondo: #f2f4f6;  /* fondo general */
+  --gris: #5f6b76;        /* texto secundario */
+  --borde: #d5dbe0;
+  --verde: #2e9e6b;       /* acento (tipo PCB) */
+  --verde-claro: #e3f4ec;
+  --texto: #1f2933;
+  --blanco: #ffffff;
+}
+
+/* ===== 2. ESTILOS BASE ===== */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; scroll-padding-top: 70px; }
+body { font-family: "Segoe UI", Arial, sans-serif; color: var(--texto); background: var(--gris-fondo); line-height: 1.65; }
+.contenedor { max-width: 1000px; margin: 0 auto; padding: 0 20px; }
+h2 { color: var(--azul); font-size: 1.7rem; margin-bottom: 8px; }
+h2::after { content: ""; display: block; width: 50px; height: 3px; background: var(--verde); margin-top: 6px; }
+h3 { color: var(--azul-claro); margin: 18px 0 6px; font-size: 1.1rem; }
+p { margin-bottom: 12px; }
+section { padding: 50px 0; }
+section:nth-of-type(even) { background: var(--blanco); }
+.intro-seccion { color: var(--gris); margin: 14px 0 22px; }
+
+/* ===== 3. NAVEGACIÓN ===== */
+header { position: sticky; top: 0; z-index: 10; background: var(--azul); box-shadow: 0 2px 6px rgba(0,0,0,.25); }
+nav { display: flex; justify-content: space-between; align-items: center; min-height: 56px; }
+.logo { color: var(--blanco); font-weight: 700; text-decoration: none; }
+.logo span { color: var(--verde); }
+.menu { display: flex; list-style: none; gap: 4px; }
+.menu a { color: #cfd9e3; text-decoration: none; padding: 8px 10px; border-radius: 4px; font-size: .9rem; transition: background .2s, color .2s; }
+.menu a:hover, .menu a.activo { background: var(--azul-claro); color: var(--blanco); }
+.btn-menu { display: none; background: none; border: 1px solid #6c88a5; color: var(--blanco); padding: 6px 12px; border-radius: 4px; font-size: 1rem; cursor: pointer; }
+
+/* ===== 4. PORTADA ===== */
+.portada { background: var(--azul); color: var(--blanco); padding: 70px 0 60px; }
+.portada .etiqueta { color: #9fd9bd; font-size: .9rem; margin-bottom: 8px; }
+.portada h1 { font-size: 2.6rem; line-height: 1.2; margin-bottom: 12px; }
+.portada p { max-width: 640px; color: #d6e0ea; }
+.datos { display: flex; flex-wrap: wrap; gap: 10px 30px; margin-top: 24px; padding-top: 18px; border-top: 1px solid #36597c; font-size: .9rem; color: #c3d1de; }
+.datos strong { color: var(--blanco); }
+.boton { display: inline-block; margin-top: 20px; background: var(--verde); color: var(--blanco); padding: 10px 22px; border-radius: 4px; text-decoration: none; transition: background .2s; }
+.boton:hover { background: #258457; }
+
+/* ===== 5. TARJETAS Y REJILLAS ===== */
+.rejilla { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 18px; }
+.tarjeta { background: var(--blanco); border: 1px solid var(--borde); border-left: 4px solid var(--verde); border-radius: 6px; padding: 16px 18px; }
+section:nth-of-type(even) .tarjeta { background: var(--gris-fondo); }
+.tarjeta h3 { margin-top: 0; }
+.tarjeta p { margin: 0; font-size: .95rem; }
+ul.lista { margin: 8px 0 12px 22px; }
+ul.lista li { margin-bottom: 6px; }
+
+/* ===== 6. TABLA DE COMPONENTES ===== */
+.tabla-caja { overflow-x: auto; border: 1px solid var(--borde); border-radius: 6px; }
+table { width: 100%; border-collapse: collapse; background: var(--blanco); font-size: .95rem; }
+th { background: var(--azul); color: var(--blanco); text-align: left; padding: 10px 14px; }
+td { padding: 10px 14px; border-top: 1px solid var(--borde); }
+tbody tr:hover { background: var(--verde-claro); }
+
+/* ===== 7. DIAGRAMA DE BLOQUES ===== */
+.diagrama { display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 10px; margin: 20px 0; }
+.bloque { background: var(--blanco); border: 2px solid var(--azul); border-radius: 6px; padding: 12px 16px; text-align: center; min-width: 150px; font-size: .9rem; }
+.bloque small { display: block; color: var(--gris); }
+.bloque.central { background: var(--azul); color: var(--blanco); border-color: var(--azul); }
+.bloque.central small { color: #b5c6d6; }
+.flecha { color: var(--verde); font-size: 1.6rem; font-weight: bold; }
+.col { display: flex; flex-direction: column; gap: 8px; }
+
+/* ===== 8. SIMULADOR ===== */
+.simulador { background: var(--blanco); border: 1px solid var(--borde); border-radius: 6px; padding: 22px; display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+.simulador label { display: block; margin-bottom: 10px; cursor: pointer; }
+.simulador input[type=range] { width: 100%; accent-color: var(--verde); }
+.resultado { background: var(--azul); color: var(--blanco); border-radius: 6px; padding: 20px; text-align: center; display: flex; flex-direction: column; justify-content: center; }
+.resultado .accion { font-size: 1.7rem; font-weight: 700; color: #9fd9bd; transition: color .2s; }
+.resultado small { color: #b5c6d6; }
+
+/* ===== 9. CÓDIGO ===== */
+pre { background: #0f2238; color: #d6e6f5; padding: 16px; border-radius: 6px; overflow-x: auto; font-size: .88rem; line-height: 1.5; }
+.com { color: #7fa6c8; }
+
+/* ===== 10. EVIDENCIAS (espacios para tus fotos) ===== */
+.foto { border: none; background: none; padding: 0; min-height: 0; }
+.foto img { width: 100%; height: 220px; object-fit: cover; display: block; border-radius: 6px; }
+
+/* ===== 11. PIE DE PÁGINA ===== */
+footer { background: var(--azul); color: #b5c6d6; text-align: center; padding: 24px 0; font-size: .9rem; }
+.biblio li { margin-bottom: 10px; word-break: break-word; }
+
+/* ===== 12. RESPONSIVE (celulares y tablets) ===== */
+@media (max-width: 800px) {
+  .btn-menu { display: block; }
+  .menu { display: none; position: absolute; top: 56px; left: 0; right: 0; flex-direction: column; background: var(--azul); padding: 8px 20px 14px; }
+  .menu.abierto { display: flex; }
+  .portada h1 { font-size: 2rem; }
+  .simulador { grid-template-columns: 1fr; }
+  .flecha { transform: rotate(90deg); }
+}
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } * { transition: none !important; } }
+</style>
+</head>
+
+<body>
+
+<!-- ===== NAVEGACIÓN ===== -->
+<header>
+  <nav class="contenedor">
+    <a href="#inicio" class="logo">Robot<span>Seguidor</span></a>
+    <button class="btn-menu" id="btnMenu" aria-label="Abrir menú">☰</button>
+    <ul class="menu" id="menu">
+      <li><a href="#introduccion">Introducción</a></li>
+      <li><a href="#teoria">Teoría</a></li>
+      <li><a href="#componentes">Componentes</a></li>
+      <li><a href="#sistema">Sistema</a></li>
+      <li><a href="#logica">Lógica</a></li>
+      <li><a href="#evidencias">Evidencias</a></li>
+      <li><a href="#cierre">Conclusiones</a></li>
+    </ul>
+  </nav>
+</header>
+
+<!-- ===== PORTADA ===== -->
+<div class="portada" id="inicio">
+  <div class="contenedor">
+    <p class="etiqueta">Proyecto de Electrónica Digital</p>
+    <h1>Robot seguidor de mano</h1>
+    <p>Robot móvil de cuatro ruedas basado en Arduino que detecta una mano con sensores infrarrojos y un sensor ultrasónico, y responde moviendo sus motores.</p>
+    <a href="#sistema" class="boton">Ver cómo funciona</a>
+    <div class="datos">
+      <span><strong>Estudiante:</strong> Franklin Omar Ramos Gutiérrez</span>
+      <span><strong>Carné:</strong> 6990-24-2253</span>
+      <span><strong>Catedrático:</strong> Ing. Edgar Carrera</span>
+      <span><strong>Sección:</strong> A</span>
+      <span><strong>Fecha:</strong> octubre 2026</span>
+    </div>
+    <div class="datos" style="border:none;margin-top:0;padding-top:6px">
+      <span>Universidad Mariano Gálvez de Guatemala · Facultad de Ingeniería · Lic. en Sistemas de Información y Ciencias de la Computación</span>
+    </div>
+  </div>
+</div>
+
+<!-- ===== INTRODUCCIÓN Y OBJETIVOS ===== -->
+<section id="introduccion">
+  <div class="contenedor">
+    <h2>Introducción</h2>
+    <p class="intro-seccion">El proyecto consiste en el diseño y construcción de un robot móvil, basado en una tarjeta Arduino, capaz de detectar una mano y responder a sus movimientos.</p>
+    <p>Los sensores entregan señales de entrada que Arduino procesa con una lógica previamente programada. Según lo detectado, el robot puede avanzar, girar hacia un lado o detenerse, de modo que su movimiento tenga relación directa con la posición de la mano.</p>
+    <p>El proyecto aplica conceptos de electrónica digital: manejo de señales de entrada y salida, lógica de decisión y control de dispositivos.</p>
+
+    <h3>Objetivo general</h3>
+    <p>Diseñar e implementar un robot móvil seguidor de mano utilizando Arduino, sensores y motores, capaz de detectar la posición de la mano y responder mediante el control de su movimiento.</p>
+
+    <h3>Objetivos específicos</h3>
+    <ul class="lista">
+      <li>Identificar los componentes electrónicos utilizados en la construcción del robot.</li>
+      <li>Diseñar la lógica de control para procesar las señales de los sensores.</li>
+      <li>Implementar el control de los motores según la posición detectada de la mano.</li>
+      <li>Comprobar el funcionamiento del robot mediante pruebas de detección y movimiento.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ===== PARTE TEÓRICA (resumen en tarjetas) ===== -->
+<section id="teoria">
+  <div class="contenedor">
+    <h2>Parte teórica</h2>
+    <p class="intro-seccion">Resumen de los conceptos principales que se usan en el robot.</p>
+    <div class="rejilla">
+      <div class="tarjeta"><h3>Robótica móvil</h3><p>Estudia máquinas que se desplazan combinando elementos mecánicos, electrónicos y de programación: actuadores, sensores y una unidad de control.</p></div>
+      <div class="tarjeta"><h3>Arduino</h3><p>Plataforma basada en un microcontrolador. Recibe datos de los sensores y genera señales de control para motores y servomotor. Se usa una placa Arduino UNO.</p></div>
+      <div class="tarjeta"><h3>Sensores infrarrojos</h3><p>Usan radiación infrarroja para detectar presencia. Se colocan dos (izquierdo y derecho) para saber hacia qué lado está la mano.</p></div>
+      <div class="tarjeta"><h3>Sensor ultrasónico</h3><p>Emite una señal y mide el tiempo del eco para calcular la distancia aproximada a la mano.</p></div>
+      <div class="tarjeta"><h3>Servomotor</h3><p>Gira el sensor ultrasónico a distintos ángulos para hacer un barrido. No mueve las ruedas.</p></div>
+      <div class="tarjeta"><h3>Motores DC y driver</h3><p>Cuatro motores mueven las ruedas. Como piden más corriente que un pin de Arduino, se usa un controlador (driver) de motores.</p></div>
+      <div class="tarjeta"><h3>Lógica digital</h3><p>Cada estado de los sensores (detecta / no detecta) se combina con la distancia para elegir una acción mediante condicionales.</p></div>
+      <div class="tarjeta"><h3>Alimentación y pruebas</h3><p>Una alimentación estable evita reinicios del Arduino. Cada componente se prueba por separado y luego se calibra el conjunto.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== COMPONENTES ===== -->
+<section id="componentes">
+  <div class="contenedor">
+    <h2>Materiales y herramientas</h2>
+    <p class="intro-seccion">Listado de componentes electrónicos usados en el prototipo.</p>
+    <div class="tabla-caja">
+      <table>
+        <thead><tr><th>Cant.</th><th>Componente</th><th>Función dentro del proyecto</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td>Arduino</td><td>Unidad principal de control y procesamiento</td></tr>
+          <tr><td>2</td><td>Sensores infrarrojos</td><td>Detección de la mano</td></tr>
+          <tr><td>1</td><td>Sensor ultrasónico</td><td>Medición de distancia</td></tr>
+          <tr><td>1</td><td>Servomotor</td><td>Orientación del sensor ultrasónico</td></tr>
+          <tr><td>4</td><td>Motores DC</td><td>Movimiento de las ruedas</td></tr>
+          <tr><td>4</td><td>Ruedas</td><td>Desplazamiento del robot</td></tr>
+          <tr><td>1</td><td>Controlador / driver de motores</td><td>Control de los motores DC</td></tr>
+          <tr><td>1</td><td>Placa de conexiones</td><td>Realización de conexiones electrónicas</td></tr>
+          <tr><td>—</td><td>Cables jumper</td><td>Interconexión de los componentes</td></tr>
+          <tr><td>1</td><td>Fuente o batería</td><td>Alimentación eléctrica del sistema</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="rejilla" style="margin-top:24px">
+      <div>
+        <h3>Materiales mecánicos</h3>
+        <ul class="lista">
+          <li>Base o chasis</li>
+          <li>Soportes para motores, Arduino, servomotor y sensor</li>
+          <li>Tornillos, tuercas y separadores</li>
+          <li>Elementos de fijación para ruedas y sensores</li>
+        </ul>
+      </div>
+      <div>
+        <h3>Accesorios</h3>
+        <ul class="lista">
+          <li>Cables de conexión y cable USB</li>
+          <li>Conectores y terminales</li>
+          <li>Cinta aislante y bridas</li>
+        </ul>
+      </div>
+      <div>
+        <h3>Herramientas</h3>
+        <ul class="lista">
+          <li>Destornilladores, pinzas, alicate y pelacables</li>
+          <li>Cautín y estaño (si se requiere soldar)</li>
+          <li>Multímetro digital</li>
+          <li>Computadora con cable USB</li>
+        </ul>
+      </div>
+    </div>
+    <p><strong>Nota:</strong> el multímetro sirve para comprobar continuidad y tensiones de alimentación antes de encender el robot.</p>
+  </div>
+</section>
+
+<!-- ===== DESCRIPCIÓN DEL SISTEMA ===== -->
+<section id="sistema">
+  <div class="contenedor">
+    <h2>Descripción del sistema</h2>
+    <p class="intro-seccion">El robot se analiza como un sistema de entradas, procesamiento y salidas.</p>
+
+    <!-- Diagrama de bloques hecho con HTML y CSS -->
+    <div class="diagrama">
+      <div class="col">
+        <div class="bloque">2 sensores infrarrojos<small>Izquierdo / derecho</small></div>
+        <div class="bloque">Sensor ultrasónico<small>Distancia</small></div>
+      </div>
+      <span class="flecha">→</span>
+      <div class="bloque central">Arduino<small>Procesa las señales</small></div>
+      <span class="flecha">→</span>
+      <div class="col">
+        <div class="bloque">Servomotor<small>Orienta el ultrasónico</small></div>
+        <div class="bloque">Driver de motores<small>→ 4 motores DC</small></div>
+      </div>
+    </div>
+
+    <div class="rejilla">
+      <div class="tarjeta"><h3>Configuración física</h3><p>Los cuatro motores van en la parte inferior del chasis. Arriba se colocan el Arduino y el driver. Al frente va el servomotor con el sensor ultrasónico encima. El peso debe quedar equilibrado y los cables lejos de las ruedas.</p></div>
+      <div class="tarjeta"><h3>Motores y ruedas</h3><p>Cada motor mueve una rueda, lo que da tracción en las cuatro. Arduino envía señales al driver, y el driver maneja la corriente de los motores.</p></div>
+      <div class="tarjeta"><h3>Sensores infrarrojos</h3><p>Dos sensores en la parte frontal. Según cuál detecte la mano, Arduino ejecuta una acción distinta.</p></div>
+      <div class="tarjeta"><h3>Ultrasónico y servomotor</h3><p>El servomotor cambia la orientación del sensor para medir en varias direcciones y ampliar la percepción del robot.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== LÓGICA DE CONTROL + SIMULADOR ===== -->
+<section id="logica">
+  <div class="contenedor">
+    <h2>Lógica de control</h2>
+    <p class="intro-seccion">Cada combinación de sensores produce una acción. Prueba la lógica con este simulador.</p>
+
+    <div class="simulador">
+      <div>
+        <h3 style="margin-top:0">Entradas</h3>
+        <label><input type="checkbox" id="irIzq"> Sensor infrarrojo izquierdo detecta</label>
+        <label><input type="checkbox" id="irDer"> Sensor infrarrojo derecho detecta</label>
+        <label for="distancia">Distancia (ultrasónico): <strong id="valorDist">30</strong> cm</label>
+        <input type="range" id="distancia" min="0" max="100" value="30">
+      </div>
+      <div class="resultado">
+        <small>Salida hacia los motores</small>
+        <div class="accion" id="accion">Detenerse</div>
+        <small id="explicacion"></small>
+      </div>
+    </div>
+    <p style="margin-top:10px;color:var(--gris);font-size:.9rem">Los valores de distancia del simulador son ejemplos. En el robot real se determinan con pruebas y calibración.</p>
+
+    <h3>Reglas en pseudocódigo</h3>
+<pre><span class="com">// Lectura de sensores en cada ciclo</span>
+si (mano demasiado cerca)        → detenerse
+si no, si (IR izquierdo detecta) → girar a la izquierda
+si no, si (IR derecho detecta)   → girar a la derecha
+si no, si (mano al frente)       → avanzar
+si no                            → detenerse</pre>
+    <p style="margin-top:12px">Con esto se aplican entradas digitales, salidas digitales, estados lógicos y decisiones con condicionales.</p>
+  </div>
+</section>
+
+<!-- ===== EVIDENCIAS ===== -->
+<section id="evidencias">
+  <div class="contenedor">
+    <h2>Evidencias fotográficas</h2>
+    <div class="rejilla">
+      <div class="foto"><img src="Imagen1.jpeg"></div>
+      <div class="foto"><img src="Imagen2.jpeg"></div>
+      <div class="foto"><img src="Imagen3.jpeg"></div>
+      <div class="foto"><img src="Imagen4.jpeg"></div>
+      <div class="foto"><img src="Imagen5.jpeg"></div>
+      <div class="foto"><img src="Imagen6.jpeg"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== CONCLUSIONES, RECOMENDACIONES, BIBLIOGRAFÍA ===== -->
+<section id="cierre">
+  <div class="contenedor">
+    <h2>Conclusiones</h2>
+    <ul class="lista" style="margin-top:14px">
+      <li>El proyecto aplicó la electrónica digital integrando Arduino, sensores infrarrojos, sensor ultrasónico, servomotor y motores DC, cada uno con una función específica.</li>
+      <li>Se comprendió cómo las señales de los sensores se procesan para generar acciones en los motores, y la importancia de las conexiones y la programación.</li>
+      <li>La construcción y las pruebas fortalecieron los conocimientos prácticos y mostraron cómo distintos dispositivos forman un sistema automatizado que responde a su entorno.</li>
+    </ul>
+
+    <h2 style="margin-top:34px">Recomendaciones</h2>
+    <ul class="lista" style="margin-top:14px">
+      <li>Revisar las conexiones eléctricas (Arduino, sensores, motores y alimentación) antes de encender el robot y mantener el cableado ordenado.</li>
+      <li>Probar cada componente por separado antes de la prueba general.</li>
+      <li>Calibrar los sensores, hacer varias pruebas de seguimiento y documentar el proceso con fotografías.</li>
+    </ul>
+
+    <h2 style="margin-top:34px">Bibliografía</h2>
+    <ul class="lista biblio" style="margin-top:14px">
+      <li>Arduino. (s. f.). <em>Arduino Documentation.</em> https://docs.arduino.cc/</li>
+      <li>Arduino. (s. f.). <em>Arduino Uno Rev3.</em> https://docs.arduino.cc/hardware/uno-rev3</li>
+      <li>Elecfreaks. (s. f.). <em>HC-SR04 Ultrasonic Sensor.</em> https://www.elecfreaks.com/estore/HC-SR04-Ultrasonic-Sensor.html</li>
+      <li>Palmares Trejo, E., Sánchez Niño, F., de Anda Salazar, F. J., &amp; Soubervielle Montalvo, E. (2021). Robótica educativa: diseño y construcción de un robot seguidor de línea. <em>Revista Conexxión de Ingeniería.</em></li>
+      <li>Sukri, H., Laksono, D. T., Laksono, D. T., &amp; Ulum, M. (2021). Ultrasonic signal implementation in Arduino-based obstacle robot control system. <em>E3S Web of Conferences, 328,</em> 02008. https://doi.org/10.1051/e3sconf/202132802008</li>
+      <li>Buragohain, V., &amp; Das, P. (2023). Human following robot based on motion sensing technology. <em>Journal of Mines, Metals and Fuels, 71</em>(5), 602–606. https://doi.org/10.18311/jmmf/2023/34157</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ===== PIE DE PÁGINA ===== -->
+<footer>
+  <div class="contenedor">
+    <p>Franklin Omar Ramos Gutiérrez · framosg3@miumg.edu.gt</p>
+    <p>Universidad Mariano Gálvez de Guatemala · Electrónica Digital · Guatemala, octubre 2026</p>
+  </div>
+</footer>
+
+<script>
+/* ===== 1. MENÚ EN CELULAR: abrir y cerrar ===== */
+const btnMenu = document.getElementById("btnMenu");
+const menu = document.getElementById("menu");
+
+btnMenu.addEventListener("click", () => menu.classList.toggle("abierto"));
+// Al elegir una opción, se cierra el menú
+menu.querySelectorAll("a").forEach(enlace => {
+  enlace.addEventListener("click", () => menu.classList.remove("abierto"));
+});
+
+/* ===== 2. RESALTAR LA SECCIÓN ACTUAL EN EL MENÚ ===== */
+const secciones = document.querySelectorAll("section[id]");
+window.addEventListener("scroll", () => {
+  let actual = "";
+  secciones.forEach(sec => {
+    if (window.scrollY >= sec.offsetTop - 120) actual = sec.id;
+  });
+  menu.querySelectorAll("a").forEach(a => {
+    a.classList.toggle("activo", a.getAttribute("href") === "#" + actual);
+  });
+});
+
+/* ===== 3. SIMULADOR DE LÓGICA ===== */
+// Valores de ejemplo: cámbialos si quieres otros límites
+const DIST_MINIMA = 10;   // cm: más cerca que esto, el robot se detiene
+const DIST_MAXIMA = 60;   // cm: más lejos que esto, no hay detección útil
+
+const irIzq = document.getElementById("irIzq");
+const irDer = document.getElementById("irDer");
+const distancia = document.getElementById("distancia");
+const valorDist = document.getElementById("valorDist");
+const accion = document.getElementById("accion");
+const explicacion = document.getElementById("explicacion");
+
+function actualizarSimulador() {
+  const d = Number(distancia.value);
+  valorDist.textContent = d;
+
+  let texto, motivo;
+
+  if (d < DIST_MINIMA) {
+    texto = "Detenerse";
+    motivo = "La mano está demasiado cerca.";
+  } else if (irIzq.checked && !irDer.checked) {
+    texto = "Girar a la izquierda";
+    motivo = "Solo el sensor izquierdo detecta la mano.";
+  } else if (irDer.checked && !irIzq.checked) {
+    texto = "Girar a la derecha";
+    motivo = "Solo el sensor derecho detecta la mano.";
+  } else if (d <= DIST_MAXIMA) {
+    texto = "Avanzar";
+    motivo = "La mano está al frente a una distancia adecuada.";
+  } else {
+    texto = "Detenerse";
+    motivo = "No hay una detección útil.";
+  }
+
+  accion.textContent = texto;
+  explicacion.textContent = motivo;
+}
+
+[irIzq, irDer, distancia].forEach(el => el.addEventListener("input", actualizarSimulador));
+actualizarSimulador(); // Estado inicial
+</script>
+
+</body>
+</html>
