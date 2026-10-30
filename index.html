@@ -69,35 +69,38 @@ td { padding: 10px 14px; border-top: 1px solid var(--borde); }
 tbody tr:hover { background: var(--verde-claro); }
 
 /* ===== 7. DIAGRAMA DE BLOQUES ===== */
-.diagrama { display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 10px; margin: 20px 0; }
+.diagrama { display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 10px; margin: 20px 0 8px; }
 .bloque { background: var(--blanco); border: 2px solid var(--azul); border-radius: 6px; padding: 12px 16px; text-align: center; min-width: 150px; font-size: .9rem; }
 .bloque small { display: block; color: var(--gris); }
 .bloque.central { background: var(--azul); color: var(--blanco); border-color: var(--azul); }
 .bloque.central small { color: #b5c6d6; }
+.bloque.energia { border-color: var(--verde); background: var(--verde-claro); }
 .flecha { color: var(--verde); font-size: 1.6rem; font-weight: bold; }
 .col { display: flex; flex-direction: column; gap: 8px; }
+.base-sensores { border: 2px dashed var(--verde); border-radius: 8px; padding: 10px; }
+.base-sensores > small { display: block; text-align: center; color: var(--verde); font-size: .8rem; margin-bottom: 6px; }
 
 /* ===== 8. SIMULADOR ===== */
 .simulador { background: var(--blanco); border: 1px solid var(--borde); border-radius: 6px; padding: 22px; display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
 .simulador label { display: block; margin-bottom: 10px; cursor: pointer; }
 .simulador input[type=range] { width: 100%; accent-color: var(--verde); }
 .resultado { background: var(--azul); color: var(--blanco); border-radius: 6px; padding: 20px; text-align: center; display: flex; flex-direction: column; justify-content: center; }
-.resultado .accion { font-size: 1.7rem; font-weight: 700; color: #9fd9bd; transition: color .2s; }
+.resultado .accion { font-size: 1.7rem; font-weight: 700; color: #9fd9bd; }
 .resultado small { color: #b5c6d6; }
 
 /* ===== 9. CÓDIGO ===== */
 pre { background: #0f2238; color: #d6e6f5; padding: 16px; border-radius: 6px; overflow-x: auto; font-size: .88rem; line-height: 1.5; }
 .com { color: #7fa6c8; }
 
-/* ===== 10. EVIDENCIAS (espacios para tus fotos) ===== */
-.foto { border: none; background: none; padding: 0; min-height: 0; }
-.foto img { width: 100%; height: 220px; object-fit: cover; display: block; border-radius: 6px; }
+/* ===== 10. EVIDENCIAS (5 fotos, sin marco) ===== */
+.foto { border: none; background: none; padding: 0; }
+.foto img { width: 100%; height: 240px; object-fit: cover; display: block; border-radius: 6px; }
 
-/* ===== 11. PIE DE PÁGINA ===== */
+/* ===== 11. PIE DE PÁGINA Y BIBLIOGRAFÍA ===== */
 footer { background: var(--azul); color: #b5c6d6; text-align: center; padding: 24px 0; font-size: .9rem; }
 .biblio li { margin-bottom: 10px; word-break: break-word; }
 
-/* ===== 12. RESPONSIVE (celulares y tablets) ===== */
+/* ===== 12. RESPONSIVE ===== */
 @media (max-width: 800px) {
   .btn-menu { display: block; }
   .menu { display: none; position: absolute; top: 56px; left: 0; right: 0; flex-direction: column; background: var(--azul); padding: 8px 20px 14px; }
@@ -134,7 +137,7 @@ footer { background: var(--azul); color: #b5c6d6; text-align: center; padding: 2
   <div class="contenedor">
     <p class="etiqueta">Proyecto de Electrónica Digital</p>
     <h1>Robot seguidor de mano</h1>
-    <p>Robot móvil de cuatro ruedas basado en Arduino que detecta una mano con sensores infrarrojos y un sensor ultrasónico, y responde moviendo sus motores.</p>
+    <p>Robot móvil de cuatro ruedas controlado con Arduino UNO. Tres sensores montados sobre una base giratoria detectan la posición de una mano y el robot responde avanzando, girando o deteniéndose.</p>
     <a href="#sistema" class="boton">Ver cómo funciona</a>
     <div class="datos">
       <span><strong>Estudiante:</strong> Franklin Omar Ramos Gutiérrez</span>
@@ -153,19 +156,20 @@ footer { background: var(--azul); color: #b5c6d6; text-align: center; padding: 2
 <section id="introduccion">
   <div class="contenedor">
     <h2>Introducción</h2>
-    <p class="intro-seccion">El proyecto consiste en el diseño y construcción de un robot móvil, basado en una tarjeta Arduino, capaz de detectar una mano y responder a sus movimientos.</p>
-    <p>Los sensores entregan señales de entrada que Arduino procesa con una lógica previamente programada. Según lo detectado, el robot puede avanzar, girar hacia un lado o detenerse, de modo que su movimiento tenga relación directa con la posición de la mano.</p>
-    <p>El proyecto aplica conceptos de electrónica digital: manejo de señales de entrada y salida, lógica de decisión y control de dispositivos.</p>
+    <p class="intro-seccion">Diseño y construcción de un robot móvil seguidor de mano, con una tarjeta Arduino UNO como unidad principal de control.</p>
+    <p>El robot detecta la presencia y posición aproximada de una mano para responder con movimientos de avance, giro y detención. Integra un sensor ultrasónico, dos sensores infrarrojos, un servomotor y un módulo controlador de motores L293D.</p>
+    <p>Los tres sensores están instalados sobre una misma base móvil accionada por el servomotor: el ultrasónico al frente y los infrarrojos a sus lados. Arduino interpreta las señales según el programa y ordena a los cuatro motores DC, conectados al módulo L293D, el desplazamiento correspondiente.</p>
+    <p>El proyecto aplica la electrónica digital en el procesamiento de señales de entrada y salida, la programación, la lógica de decisión y el control de dispositivos electromecánicos.</p>
 
     <h3>Objetivo general</h3>
-    <p>Diseñar e implementar un robot móvil seguidor de mano utilizando Arduino, sensores y motores, capaz de detectar la posición de la mano y responder mediante el control de su movimiento.</p>
+    <p>Diseñar y construir un robot móvil seguidor de mano utilizando una tarjeta Arduino UNO, sensores electrónicos y motores de corriente directa, capaz de detectar la presencia y posición aproximada de una mano y responder mediante el control automatizado de su desplazamiento.</p>
 
     <h3>Objetivos específicos</h3>
     <ul class="lista">
-      <li>Identificar los componentes electrónicos utilizados en la construcción del robot.</li>
-      <li>Diseñar la lógica de control para procesar las señales de los sensores.</li>
-      <li>Implementar el control de los motores según la posición detectada de la mano.</li>
-      <li>Comprobar el funcionamiento del robot mediante pruebas de detección y movimiento.</li>
+      <li>Identificar y utilizar los componentes necesarios: Arduino UNO, sensor ultrasónico, sensores infrarrojos, servomotor y módulo controlador L293D.</li>
+      <li>Implementar un sistema de detección con una base móvil accionada por un servomotor, que oriente los sensores para detectar la mano.</li>
+      <li>Controlar los cuatro motores DC mediante el módulo L293D para realizar avance, giro y detención según las señales recibidas.</li>
+      <li>Realizar pruebas de funcionamiento para comprobar que el robot detecta una mano y responde con el desplazamiento correspondiente.</li>
     </ul>
   </div>
 </section>
@@ -174,16 +178,18 @@ footer { background: var(--azul); color: #b5c6d6; text-align: center; padding: 2
 <section id="teoria">
   <div class="contenedor">
     <h2>Parte teórica</h2>
-    <p class="intro-seccion">Resumen de los conceptos principales que se usan en el robot.</p>
+    <p class="intro-seccion">Resumen de los conceptos principales que se aplican en el robot.</p>
     <div class="rejilla">
-      <div class="tarjeta"><h3>Robótica móvil</h3><p>Estudia máquinas que se desplazan combinando elementos mecánicos, electrónicos y de programación: actuadores, sensores y una unidad de control.</p></div>
-      <div class="tarjeta"><h3>Arduino</h3><p>Plataforma basada en un microcontrolador. Recibe datos de los sensores y genera señales de control para motores y servomotor. Se usa una placa Arduino UNO.</p></div>
-      <div class="tarjeta"><h3>Sensores infrarrojos</h3><p>Usan radiación infrarroja para detectar presencia. Se colocan dos (izquierdo y derecho) para saber hacia qué lado está la mano.</p></div>
-      <div class="tarjeta"><h3>Sensor ultrasónico</h3><p>Emite una señal y mide el tiempo del eco para calcular la distancia aproximada a la mano.</p></div>
-      <div class="tarjeta"><h3>Servomotor</h3><p>Gira el sensor ultrasónico a distintos ángulos para hacer un barrido. No mueve las ruedas.</p></div>
-      <div class="tarjeta"><h3>Motores DC y driver</h3><p>Cuatro motores mueven las ruedas. Como piden más corriente que un pin de Arduino, se usa un controlador (driver) de motores.</p></div>
-      <div class="tarjeta"><h3>Lógica digital</h3><p>Cada estado de los sensores (detecta / no detecta) se combina con la distancia para elegir una acción mediante condicionales.</p></div>
-      <div class="tarjeta"><h3>Alimentación y pruebas</h3><p>Una alimentación estable evita reinicios del Arduino. Cada componente se prueba por separado y luego se calibra el conjunto.</p></div>
+      <div class="tarjeta"><h3>Electrónica digital</h3><p>Estudia sistemas que trabajan con estados lógicos (cero y uno). Las entradas se procesan para decidir las salidas sin intervención constante de una persona.</p></div>
+      <div class="tarjeta"><h3>Arduino UNO</h3><p>Placa con el microcontrolador ATmega328P, con entradas y salidas digitales, entradas analógicas y pines PWM. Coordina todo el prototipo.</p></div>
+      <div class="tarjeta"><h3>Sensores</h3><p>Convierten información del entorno en señales para el sistema de control. Aquí se combinan dos tecnologías que se complementan: infrarroja y ultrasónica.</p></div>
+      <div class="tarjeta"><h3>Sensores infrarrojos</h3><p>Detectan objetos dentro de una zona mediante luz infrarroja reflejada. Uno se ubica a cada lado del sensor ultrasónico para identificar el lado de detección.</p></div>
+      <div class="tarjeta"><h3>Sensor ultrasónico</h3><p>Emite ondas sonoras de alta frecuencia y mide el tiempo del eco para calcular la distancia a la mano, considerando la velocidad del sonido en el aire.</p></div>
+      <div class="tarjeta"><h3>Servomotor</h3><p>Controla la posición angular de su eje. Mueve la base donde están los tres sensores para explorar distintas direcciones sin mover el chasis.</p></div>
+      <div class="tarjeta"><h3>Motores DC y L293D</h3><p>Cuatro motores DC mueven las ruedas. El L293D usa puentes H para cambiar su sentido de giro, sin conectarlos directamente a los pines de Arduino.</p></div>
+      <div class="tarjeta"><h3>Lógica digital</h3><p>Los estados de los sensores infrarrojos y la distancia se combinan con condicionales para elegir la acción: corregir hacia un lado, avanzar o detenerse.</p></div>
+      <div class="tarjeta"><h3>Alimentación</h3><p>Una alimentación inestable puede causar movimientos irregulares o reinicios de la tarjeta. Cada componente exige sus propias condiciones eléctricas.</p></div>
+      <div class="tarjeta"><h3>Programación y pruebas</h3><p>Se programa en el entorno de Arduino y se repite un ciclo de lectura y control. Cada componente se prueba por separado y luego el sistema completo.</p></div>
     </div>
   </div>
 </section>
@@ -192,21 +198,22 @@ footer { background: var(--azul); color: #b5c6d6; text-align: center; padding: 2
 <section id="componentes">
   <div class="contenedor">
     <h2>Materiales y herramientas</h2>
-    <p class="intro-seccion">Listado de componentes electrónicos usados en el prototipo.</p>
+    <p class="intro-seccion">Componentes electrónicos, mecánicos y accesorios utilizados en la construcción.</p>
     <div class="tabla-caja">
       <table>
-        <thead><tr><th>Cant.</th><th>Componente</th><th>Función dentro del proyecto</th></tr></thead>
+        <thead><tr><th>Cant.</th><th>Componente</th><th>Función en el proyecto</th></tr></thead>
         <tbody>
-          <tr><td>1</td><td>Arduino</td><td>Unidad principal de control y procesamiento</td></tr>
-          <tr><td>2</td><td>Sensores infrarrojos</td><td>Detección de la mano</td></tr>
-          <tr><td>1</td><td>Sensor ultrasónico</td><td>Medición de distancia</td></tr>
-          <tr><td>1</td><td>Servomotor</td><td>Orientación del sensor ultrasónico</td></tr>
-          <tr><td>4</td><td>Motores DC</td><td>Movimiento de las ruedas</td></tr>
+          <tr><td>1</td><td>Arduino UNO</td><td>Unidad principal de control y procesamiento de señales</td></tr>
+          <tr><td>1</td><td>Módulo controlador de cuatro motores con L293D</td><td>Control del funcionamiento de los cuatro motores DC</td></tr>
+          <tr><td>2</td><td>Sensores infrarrojos</td><td>Detección de la mano mediante señales infrarrojas</td></tr>
+          <tr><td>1</td><td>Sensor ultrasónico</td><td>Medición de distancia respecto a objetos del entorno</td></tr>
+          <tr><td>1</td><td>Servomotor</td><td>Movimiento de la base donde están instalados los sensores</td></tr>
+          <tr><td>4</td><td>Motores de corriente continua (DC)</td><td>Generación del movimiento del robot</td></tr>
           <tr><td>4</td><td>Ruedas</td><td>Desplazamiento del robot</td></tr>
-          <tr><td>1</td><td>Controlador / driver de motores</td><td>Control de los motores DC</td></tr>
-          <tr><td>1</td><td>Placa de conexiones</td><td>Realización de conexiones electrónicas</td></tr>
-          <tr><td>—</td><td>Cables jumper</td><td>Interconexión de los componentes</td></tr>
-          <tr><td>1</td><td>Fuente o batería</td><td>Alimentación eléctrica del sistema</td></tr>
+          <tr><td>1</td><td>Interruptor de encendido y apagado</td><td>Habilita o interrumpe la alimentación del circuito</td></tr>
+          <tr><td>4</td><td>Baterías recargables de 4.2 V</td><td>Suministro de energía eléctrica para el prototipo</td></tr>
+          <tr><td>2</td><td>Portabaterías (2 baterías cada uno)</td><td>Alojamiento y conexión de las baterías</td></tr>
+          <tr><td>—</td><td>Cables jumper (según necesidad)</td><td>Interconexión de los componentes electrónicos</td></tr>
         </tbody>
       </table>
     </div>
@@ -215,31 +222,22 @@ footer { background: var(--azul); color: #b5c6d6; text-align: center; padding: 2
       <div>
         <h3>Materiales mecánicos</h3>
         <ul class="lista">
-          <li>Base o chasis</li>
-          <li>Soportes para motores, Arduino, servomotor y sensor</li>
-          <li>Tornillos, tuercas y separadores</li>
-          <li>Elementos de fijación para ruedas y sensores</li>
+          <li>1 chasis para el robot</li>
+          <li>Elementos de fijación para motores y ruedas</li>
+          <li>Base o soporte móvil para los tres sensores</li>
+          <li>Elementos de sujeción para el servomotor y los componentes electrónicos</li>
         </ul>
       </div>
       <div>
-        <h3>Accesorios</h3>
+        <h3>Accesorios y herramientas</h3>
         <ul class="lista">
-          <li>Cables de conexión y cable USB</li>
-          <li>Conectores y terminales</li>
-          <li>Cinta aislante y bridas</li>
-        </ul>
-      </div>
-      <div>
-        <h3>Herramientas</h3>
-        <ul class="lista">
-          <li>Destornilladores, pinzas, alicate y pelacables</li>
-          <li>Cautín y estaño (si se requiere soldar)</li>
+          <li>Cables de conexión y elementos para organizar los componentes</li>
+          <li>Destornilladores, pinzas, alicate de corte y pelacables</li>
           <li>Multímetro digital</li>
-          <li>Computadora con cable USB</li>
+          <li>Computadora y cable USB para cargar el programa en Arduino UNO</li>
         </ul>
       </div>
     </div>
-    <p><strong>Nota:</strong> el multímetro sirve para comprobar continuidad y tensiones de alimentación antes de encender el robot.</p>
   </div>
 </section>
 
@@ -251,24 +249,36 @@ footer { background: var(--azul); color: #b5c6d6; text-align: center; padding: 2
 
     <!-- Diagrama de bloques hecho con HTML y CSS -->
     <div class="diagrama">
-      <div class="col">
-        <div class="bloque">2 sensores infrarrojos<small>Izquierdo / derecho</small></div>
-        <div class="bloque">Sensor ultrasónico<small>Distancia</small></div>
+      <div class="base-sensores">
+        <small>Base móvil (gira con el servomotor)</small>
+        <div class="col">
+          <div class="bloque">2 sensores infrarrojos<small>A los lados</small></div>
+          <div class="bloque">Sensor ultrasónico<small>Al frente · distancia</small></div>
+        </div>
       </div>
       <span class="flecha">→</span>
-      <div class="bloque central">Arduino<small>Procesa las señales</small></div>
+      <div class="bloque central">Arduino UNO<small>Procesa las señales</small></div>
       <span class="flecha">→</span>
       <div class="col">
-        <div class="bloque">Servomotor<small>Orienta el ultrasónico</small></div>
-        <div class="bloque">Driver de motores<small>→ 4 motores DC</small></div>
+        <div class="bloque">Servomotor<small>Orienta la base de sensores</small></div>
+        <div class="bloque">Módulo L293D<small>→ 4 motores DC</small></div>
       </div>
     </div>
+    <div class="diagrama" style="margin-top:0">
+      <div class="bloque energia">4 baterías de 4.2 V<small>En 2 portabaterías</small></div>
+      <span class="flecha">→</span>
+      <div class="bloque energia">Interruptor<small>Encendido / apagado</small></div>
+      <span class="flecha">→</span>
+      <div class="bloque energia">Módulo L293D<small>Alimentación del sistema</small></div>
+    </div>
 
-    <div class="rejilla">
-      <div class="tarjeta"><h3>Configuración física</h3><p>Los cuatro motores van en la parte inferior del chasis. Arriba se colocan el Arduino y el driver. Al frente va el servomotor con el sensor ultrasónico encima. El peso debe quedar equilibrado y los cables lejos de las ruedas.</p></div>
-      <div class="tarjeta"><h3>Motores y ruedas</h3><p>Cada motor mueve una rueda, lo que da tracción en las cuatro. Arduino envía señales al driver, y el driver maneja la corriente de los motores.</p></div>
-      <div class="tarjeta"><h3>Sensores infrarrojos</h3><p>Dos sensores en la parte frontal. Según cuál detecte la mano, Arduino ejecuta una acción distinta.</p></div>
-      <div class="tarjeta"><h3>Ultrasónico y servomotor</h3><p>El servomotor cambia la orientación del sensor para medir en varias direcciones y ampliar la percepción del robot.</p></div>
+    <div class="rejilla" style="margin-top:24px">
+      <div class="tarjeta"><h3>Configuración física</h3><p>Los cuatro motores van en la parte inferior del chasis, cada uno unido a una rueda. Arriba se distribuyen el Arduino UNO y el módulo L293D. En la zona de detección está la base móvil con el servomotor. El cableado no debe interferir con ruedas, motores ni con el giro de la base.</p></div>
+      <div class="tarjeta"><h3>Motores y ruedas</h3><p>Los cuatro motores DC dan tracción en las cuatro ruedas y se conectan al L293D. Arduino envía las señales de control y el módulo gestiona la alimentación y el accionamiento de los motores.</p></div>
+      <div class="tarjeta"><h3>Sensores infrarrojos</h3><p>Instalados a los lados del sensor ultrasónico, sobre la misma base. Aportan dos señales de detección desde posiciones distintas, que Arduino usa en la lógica de control.</p></div>
+      <div class="tarjeta"><h3>Ultrasónico y servomotor</h3><p>El sensor ultrasónico va al frente de la base. Cuando el servomotor gira, se orientan juntos el ultrasónico y los dos infrarrojos, porque comparten la misma estructura.</p></div>
+      <div class="tarjeta"><h3>Conexión del Arduino</h3><p>A Arduino UNO se conectan los sensores y el servomotor; también envía señales de control al L293D. Antes de encender se revisan conexiones firmes y que no haya contactos accidentales entre terminales.</p></div>
+      <div class="tarjeta"><h3>Alimentación eléctrica</h3><p>Cuatro baterías recargables de 4.2 V en dos portabaterías, unidos entre sí para formar dos conductores principales. En uno va un interruptor que permite o corta la energía. Se verifica la polaridad de cada conexión.</p></div>
     </div>
   </div>
 </section>
@@ -277,46 +287,58 @@ footer { background: var(--azul); color: #b5c6d6; text-align: center; padding: 2
 <section id="logica">
   <div class="contenedor">
     <h2>Lógica de control</h2>
-    <p class="intro-seccion">Cada combinación de sensores produce una acción. Prueba la lógica con este simulador.</p>
+    <p class="intro-seccion">Arduino relaciona las condiciones de entrada con estados de salida. Prueba la lógica con este simulador.</p>
 
     <div class="simulador">
       <div>
         <h3 style="margin-top:0">Entradas</h3>
         <label><input type="checkbox" id="irIzq"> Sensor infrarrojo izquierdo detecta</label>
         <label><input type="checkbox" id="irDer"> Sensor infrarrojo derecho detecta</label>
-        <label for="distancia">Distancia (ultrasónico): <strong id="valorDist">30</strong> cm</label>
-        <input type="range" id="distancia" min="0" max="100" value="30">
+        <label for="distancia">Distancia (ultrasónico): <strong id="valorDist">10</strong> cm</label>
+        <input type="range" id="distancia" min="0" max="30" value="10">
       </div>
       <div class="resultado">
-        <small>Salida hacia los motores</small>
+        <small>Salida hacia los motores (L293D)</small>
         <div class="accion" id="accion">Detenerse</div>
         <small id="explicacion"></small>
       </div>
     </div>
-    <p style="margin-top:10px;color:var(--gris);font-size:.9rem">Los valores de distancia del simulador son ejemplos. En el robot real se determinan con pruebas y calibración.</p>
+    <p style="margin-top:10px;color:var(--gris);font-size:.9rem">El ultrasónico está configurado con un alcance máximo de 15 cm para detectar la mano. El límite de detención (5 cm) es un valor de ejemplo, porque en el robot real se define con las pruebas del prototipo.</p>
 
     <h3>Reglas en pseudocódigo</h3>
-<pre><span class="com">// Lectura de sensores en cada ciclo</span>
-si (mano demasiado cerca)        → detenerse
-si no, si (IR izquierdo detecta) → girar a la izquierda
-si no, si (IR derecho detecta)   → girar a la derecha
-si no, si (mano al frente)       → avanzar
-si no                            → detenerse</pre>
-    <p style="margin-top:12px">Con esto se aplican entradas digitales, salidas digitales, estados lógicos y decisiones con condicionales.</p>
+<pre><span class="com">// Ciclo que se repite mientras el robot está encendido</span>
+leer sensores infrarrojos y sensor ultrasónico
+si (distancia alcanza el límite) → detener los motores
+si no, si (detecta el lado izquierdo) → corregir hacia la izquierda
+si no, si (detecta el lado derecho)   → corregir hacia la derecha
+si no, si (mano al frente)            → avanzar
+si no                                 → detener los motores</pre>
+    <p style="margin-top:12px">Así se aplican entradas y salidas digitales, estados lógicos, procesamiento de señales y control mediante condiciones.</p>
+
+    <h3>Pruebas y comprobación</h3>
+    <ul class="lista">
+      <li>Verificar que Arduino reciba las señales de los sensores y controle el servomotor.</li>
+      <li>Comprobar las mediciones del ultrasónico y la respuesta de los infrarrojos.</li>
+      <li>Revisar los cuatro motores, su sentido de giro y la respuesta del L293D.</li>
+      <li>Confirmar que el cableado no limite el giro de la base móvil.</li>
+      <li>Prueba general: colocar la mano frente al robot, cambiar su posición y observar la respuesta.</li>
+    </ul>
   </div>
 </section>
 
-<!-- ===== EVIDENCIAS ===== -->
+<!-- ===== EVIDENCIAS (6 imágenes: Imagen1.jpeg a Imagen6.jpeg en la misma carpeta que index.html) ===== -->
 <section id="evidencias">
   <div class="contenedor">
-    <h2>Evidencias fotográficas</h2>
+    <h2>Evidencia fotográfica</h2>
+    <p class="intro-seccion">Fotografías del proceso de construcción y de las pruebas del robot.</p>
     <div class="rejilla">
-      <div class="foto"><img src="Imagen1.jpeg"></div>
-      <div class="foto"><img src="Imagen2.jpeg"></div>
-      <div class="foto"><img src="Imagen3.jpeg"></div>
-      <div class="foto"><img src="Imagen4.jpeg"></div>
-      <div class="foto"><img src="Imagen5.jpeg"></div>
-      <div class="foto"><img src="Imagen6.jpeg"></div>
+      <!-- Cambia el texto de alt por una descripción real de cada foto -->
+      <div class="foto"><img src="Imagen1.jpeg" alt="Evidencia fotográfica 1"></div>
+      <div class="foto"><img src="Imagen2.jpeg" alt="Evidencia fotográfica 2"></div>
+      <div class="foto"><img src="Imagen3.jpeg" alt="Evidencia fotográfica 3"></div>
+      <div class="foto"><img src="Imagen4.jpeg" alt="Evidencia fotográfica 4"></div>
+      <div class="foto"><img src="Imagen5.jpeg" alt="Evidencia fotográfica 5"></div>
+      <div class="foto"><img src="Imagen6.jpeg" alt="Evidencia fotográfica 6"></div>
     </div>
   </div>
 </section>
@@ -326,26 +348,28 @@ si no                            → detenerse</pre>
   <div class="contenedor">
     <h2>Conclusiones</h2>
     <ul class="lista" style="margin-top:14px">
-      <li>El proyecto aplicó la electrónica digital integrando Arduino, sensores infrarrojos, sensor ultrasónico, servomotor y motores DC, cada uno con una función específica.</li>
-      <li>Se comprendió cómo las señales de los sensores se procesan para generar acciones en los motores, y la importancia de las conexiones y la programación.</li>
-      <li>La construcción y las pruebas fortalecieron los conocimientos prácticos y mostraron cómo distintos dispositivos forman un sistema automatizado que responde a su entorno.</li>
+      <li>El proyecto aplicó la electrónica digital integrando Arduino UNO, sensores infrarrojos, sensor ultrasónico, servomotor y cuatro motores DC, y permitió comprender la función de cada elemento y la importancia de integrarlos.</li>
+      <li>Se comprendió cómo Arduino procesa las señales de los sensores para generar respuestas en el sistema de movimiento. El servomotor amplía la capacidad de detectar la presencia y dirección de la mano al orientar la base de sensores. También se comprobó la relevancia de las conexiones eléctricas y la programación.</li>
+      <li>La construcción y las pruebas fortalecieron los conocimientos sobre microcontroladores, sensores y control de motores, y mostraron cómo distintos dispositivos trabajan juntos para detectar estímulos del entorno y responder con movimiento.</li>
     </ul>
 
     <h2 style="margin-top:34px">Recomendaciones</h2>
     <ul class="lista" style="margin-top:14px">
-      <li>Revisar las conexiones eléctricas (Arduino, sensores, motores y alimentación) antes de encender el robot y mantener el cableado ordenado.</li>
-      <li>Probar cada componente por separado antes de la prueba general.</li>
-      <li>Calibrar los sensores, hacer varias pruebas de seguimiento y documentar el proceso con fotografías.</li>
+      <li>Verificar las conexiones eléctricas (Arduino UNO, sensores, servomotor, motores y alimentación) antes de encender el robot, y mantener el cableado organizado y sujeto para evitar desconexiones durante el desplazamiento.</li>
+      <li>Probar cada componente por separado antes de las pruebas generales, para identificar fallas en sensores, servomotor o motores y ajustarlas antes de integrar de nuevo el sistema.</li>
+      <li>Realizar pruebas de seguimiento desde distintas posiciones y distancias, ajustar la programación cuando sea necesario y conservar fotografías del proceso como evidencia.</li>
     </ul>
 
     <h2 style="margin-top:34px">Bibliografía</h2>
     <ul class="lista biblio" style="margin-top:14px">
-      <li>Arduino. (s. f.). <em>Arduino Documentation.</em> https://docs.arduino.cc/</li>
-      <li>Arduino. (s. f.). <em>Arduino Uno Rev3.</em> https://docs.arduino.cc/hardware/uno-rev3</li>
-      <li>Elecfreaks. (s. f.). <em>HC-SR04 Ultrasonic Sensor.</em> https://www.elecfreaks.com/estore/HC-SR04-Ultrasonic-Sensor.html</li>
-      <li>Palmares Trejo, E., Sánchez Niño, F., de Anda Salazar, F. J., &amp; Soubervielle Montalvo, E. (2021). Robótica educativa: diseño y construcción de un robot seguidor de línea. <em>Revista Conexxión de Ingeniería.</em></li>
+      <li>Arduino. (s. f.). <em>Arduino documentation.</em> https://docs.arduino.cc/</li>
+      <li>Arduino. (s. f.). <em>UNO R3.</em> https://docs.arduino.cc/hardware/uno-rev3/</li>
+      <li>Arduino. (s. f.). <em>Servo library.</em> GitHub. https://github.com/arduino-libraries/Servo</li>
+      <li>Buragohain, V., &amp; Das, P. (2023). Human following robot based on motion sensing technology. <em>Journal of Mines, Metals &amp; Fuels, 71</em>(5), 602–606. https://doi.org/10.18311/jmmf/2023/34157</li>
+      <li>ELECFREAKS. (s. f.). <em>HC-SR04 ultrasonic sensor user guide.</em> https://elecfreaks.com/download/EF03085-HC-SR04_Ultrasonic_Module_User_Guide.pdf</li>
+      <li>Palmares Trejo, E., Sánchez Niño, F., de Anda Salazar, F. J., &amp; Soubervielle Montalvo, C. (2021). Robótica educativa: diseño y construcción de un robot seguidor de línea. <em>Revista Conexxión de Ingeniería, 5</em>(9), 8–17. https://www.aliatuniversidades.com.mx/conexxion/blog/conexxion/index.php/robotica-educativa-diseno-y-construccion-de-un-robot-seguidor-de-linea-ano-5-numero-9</li>
+      <li>STMicroelectronics. (s. f.). <em>L293D: Push-pull four channel drivers with diodes.</em> https://www.st.com/en/motor-drivers/l293d.html</li>
       <li>Sukri, H., Laksono, D. T., Laksono, D. T., &amp; Ulum, M. (2021). Ultrasonic signal implementation in Arduino-based obstacle robot control system. <em>E3S Web of Conferences, 328,</em> 02008. https://doi.org/10.1051/e3sconf/202132802008</li>
-      <li>Buragohain, V., &amp; Das, P. (2023). Human following robot based on motion sensing technology. <em>Journal of Mines, Metals and Fuels, 71</em>(5), 602–606. https://doi.org/10.18311/jmmf/2023/34157</li>
     </ul>
   </div>
 </section>
@@ -364,7 +388,6 @@ const btnMenu = document.getElementById("btnMenu");
 const menu = document.getElementById("menu");
 
 btnMenu.addEventListener("click", () => menu.classList.toggle("abierto"));
-// Al elegir una opción, se cierra el menú
 menu.querySelectorAll("a").forEach(enlace => {
   enlace.addEventListener("click", () => menu.classList.remove("abierto"));
 });
@@ -383,8 +406,8 @@ window.addEventListener("scroll", () => {
 
 /* ===== 3. SIMULADOR DE LÓGICA ===== */
 // Valores de ejemplo: cámbialos si quieres otros límites
-const DIST_MINIMA = 10;   // cm: más cerca que esto, el robot se detiene
-const DIST_MAXIMA = 60;   // cm: más lejos que esto, no hay detección útil
+const DIST_MINIMA = 5;    // cm: a esta distancia o menos, el robot se detiene
+const DIST_MAXIMA = 15;   // cm: alcance máximo del ultrasónico; más lejos no detecta la mano
 
 const irIzq = document.getElementById("irIzq");
 const irDer = document.getElementById("irDer");
@@ -399,9 +422,9 @@ function actualizarSimulador() {
 
   let texto, motivo;
 
-  if (d < DIST_MINIMA) {
+  if (d <= DIST_MINIMA) {
     texto = "Detenerse";
-    motivo = "La mano está demasiado cerca.";
+    motivo = "La mano alcanzó el límite de distancia.";
   } else if (irIzq.checked && !irDer.checked) {
     texto = "Girar a la izquierda";
     motivo = "Solo el sensor izquierdo detecta la mano.";
